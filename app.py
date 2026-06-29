@@ -58,28 +58,13 @@ if st.button("Analyze the symptoms"):
                 2.Pre-existing: {existing_disease}
                 3.Duration: {symptom_days} days
                 4.Symptoms: "{user_symptoms}"
-
-                Evaluation Rules:
-                1. If Age < 5 or > 60 -> Elevate Risk Level.
-                2. If Duration > 7 days -> Set High Severity & Urgent Hospital Referral.
-                3. Co-relate symptoms with Pre-existing condition based on Context.
-
-                Output Format (If matched with Context):
-                1. Potential Condition: [Name]
-                2. Calculated Risk Level: [Low/Medium/High] (Justify using Age/Duration)
-                3. Primary Advice/First-Aid: [Details]
-                4. Local Specialist Referral: [Exact hospital/department from Context]
-
-                Fallback Rule (If NOT matched with Context):
-                Strictly output ONLY this exact text:
-                "I appreciate you sharing your symptoms. However, our specialized database currently does not have sufficient verified clinical context to accurately evaluate your specific condition.
-                To ensure your safety, please consider the following general steps:
-                1. Consult a General Physician: Visit your nearest hospital or a certified medical practitioner.
-                2. Monitor Your Symptoms: Keep track of any changes in body temperature, pain, or breathing.
-                3. Access Government Health Services: In Bangladesh, call 'Shastho Batayom' at 16263 for free 24/7 medical advice.
-                4. Emergency Assistance: For immediate medical emergencies, visit the nearest emergency room or call 999.
-                Disclaimer: This AI tool is for informational support based on a limited knowledge base and must not replace professional medical diagnosis."
-
+                
+                You must follow the part 1 from {context_data} to know "Instruction to Gemini API:A,B,C" and by analyzing user profile above,--give response according to:
+                A)Evaluation on patient
+                B)Advices bases on Evaluation[If matched with Context]
+                C)General advice [If NOT matched with Context]
+                if the identifying characteristics doesn't match directly or indirectly ,strictly follow C
+                Disclaimer: This on a limited knowledge base and must not replace professional medical diagnosis."
                 Crucial: Always end with a medical disclaimer."""
 
                 try:
@@ -107,9 +92,11 @@ if st.button("give the answer"):
                 {context_data}
 
                 User Question: {user_input}
-                Answer:"""
+                Answer:[strictly based on {context_data} only using your intelligence,no outside information is allowed ]
+                careful about the synonymps used by the user
+                """
                 try:
-                    model = genai.GenerativeModel("gemini-2.5-flash" \
+                    model = genai.GenerativeModel("gemini-2.5-flash-lite" \
                     "")
                     response2 = model.generate_content(prompt2,stream=2)
                     st.success("Answer from AI:")
