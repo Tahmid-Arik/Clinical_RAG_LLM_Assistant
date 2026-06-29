@@ -49,49 +49,41 @@ if st.button("Analyze the symptoms"):
             context_data = load_context()
             
             if context_data:
-                prompt = f"""You are an advanced AI Clinical Assistant under the Health & Medical Track.Your task is to analyze the user's specific health data against our Verified Medical Knowledge Base.You can use your intelligence to provide informations to the users but do not use information not related to our Verified Medical Knowledge Base.If the disease name or symptoms doesn't match with our information of then you must follow the "section 2" instruction
-
-                Verified Medical Knowledge Base:
+                prompt = f"""You are a Clinical AI Assistant under the Health & Medical Track for Bangladesh.
+                Context Database:
                 {context_data}
 
-                User Profile:
-                [CRITICAL USER DATA TO EVALUATE]
-                - Age: {user_age}years old
-                - pre-existing condition: {existing_disease}
-                - Symptom Duration: {symptom_days} days
-                - Current Symptoms described by user: "{user_symptoms}"
+                User profile:
+                1.Age: {user_age}years
+                2.Pre-existing: {existing_disease}
+                3.Duration: {symptom_days} days
+                4.Symptoms: "{user_symptoms}"
 
-                Strict Evaluation Rules based on User Data:
-                1. AGE FACTOR: If the age is under 5 or over 60, elevate the potential Risk Level by default, as these age groups are highly vulnerable.
-                2. DURATION FACTOR: Check the 'Symptom Duration'. If the duration is more than 7 days, classify the condition with higher severity and push for immediate hospital referral instead of home remedies.
-                3. PRE-EXISTING CONDITION FACTOR: If they have 'Diabetes' or 'Hypertension' or any other disease related to our{context_data}, correlate how their current symptoms might worsen their existing condition.
+                Evaluation Rules:
+                1. If Age < 5 or > 60 -> Elevate Risk Level.
+                2. If Duration > 7 days -> Set High Severity & Urgent Hospital Referral.
+                3. Co-relate symptoms with Pre-existing condition based on Context.
 
+                Output Format (If matched with Context):
+                1. Potential Condition: [Name]
+                2. Calculated Risk Level: [Low/Medium/High] (Justify using Age/Duration)
+                3. Primary Advice/First-Aid: [Details]
+                4. Local Specialist Referral: [Exact hospital/department from Context]
 
-                Based STRICTLY on the knowledge base, Provide your response in this format:
-                1. Potential Condition:(name)
-                2.Calculated Risk Level: [Low/Medium/High] (Explain why based on their Age and Duration).
-                3.Immediate Primary Advice / First-Aid:
-                4.Local specialist Referral: [Based on context data](Which specialist doctor or hospital department they should visit).
-                
-                section 2 instruction:
-                Sorry,we don't have sufficient information in our{context_data} about that disease or symptoms.You give that information to user and suggest him/her some general advice from CRITICAL FALLBACK RULE and give the compassionate guide.
-                CRITICAL FALLBACK RULE: 
-                If the user's symptoms, condition, or question is NOT covered in our Verified Medical Knowledge Base, DO NOT make up any medical diagnosis or treatment. Instead, strictly output a compassionate response in English following this exact template:
+                Fallback Rule (If NOT matched with Context):
+                Strictly output ONLY this exact text:
+                "I appreciate you sharing your symptoms. However, our specialized database currently does not have sufficient verified clinical context to accurately evaluate your specific condition.
+                To ensure your safety, please consider the following general steps:
+                1. Consult a General Physician: Visit your nearest hospital or a certified medical practitioner.
+                2. Monitor Your Symptoms: Keep track of any changes in body temperature, pain, or breathing.
+                3. Access Government Health Services: In Bangladesh, call 'Shastho Batayom' at 16263 for free 24/7 medical advice.
+                4. Emergency Assistance: For immediate medical emergencies, visit the nearest emergency room or call 999.
+                Disclaimer: This AI tool is for informational support based on a limited knowledge base and must not replace professional medical diagnosis."
 
-               "I appreciate you sharing your symptoms. However, our specialized database currently does not have sufficient verified clinical context to accurately evaluate your specific condition.
-               To ensure your safety, please consider the following general steps:
-               1. Consult a General Physician: Visit your nearest hospital or a certified medical practitioner for a proper clinical checkup.
-               2. Monitor Your Symptoms: Keep track of any changes in your body temperature, pain levels, or breathing.
-               3. Access Government Health Services: If you are in Bangladesh, you can call 'Shastho Batayom' at 16263 for free 24/7 medical advice from certified doctors.
-               4. Emergency Assistance: For immediate medical emergencies, please visit the nearest hospital emergency department or call 999.
-               Disclaimer: This AI tool is for informational support based on a limited knowledge base and must not replace professional medical diagnosis."
-                
-                Crucial Rule: Add a clear medical disclaimer at the end."""
-
-                
+                Crucial: Always end with a medical disclaimer."""
 
                 try:
-                    model = genai.GenerativeModel("gemini-3.5-flash" \
+                    model = genai.GenerativeModel("gemini-2.5-flash" \
                     "")
                     response = model.generate_content(prompt,stream=True)
                     st.success("Answer from AI:")
@@ -117,7 +109,7 @@ if st.button("give the answer"):
                 User Question: {user_input}
                 Answer:"""
                 try:
-                    model = genai.GenerativeModel("gemini-3.5-flash" \
+                    model = genai.GenerativeModel("gemini-2.5-flash" \
                     "")
                     response2 = model.generate_content(prompt2,stream=2)
                     st.success("Answer from AI:")
