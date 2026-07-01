@@ -69,7 +69,7 @@ if st.button("Answer"):
                 context_data = load_context()
                 
                 if context_data:
-                    prompt = f"""You are a Clinical AI Assistant under the Health & Medical Track for Bangladesh.Answer the question of the user by using your own intelligence but within our {context_data} is mandatory for you.
+                    prompt = f"""You are a Clinical AI Assistant under the Health & Medical Track for Bangladesh.Answer the question of the user by using your own intelligence but within our {context_data} is mandatory for you.You must give proper advice to the user.
                 Context Database:
                 {context_data}
                 if user ask you any health or medical information for gaining knowledge,describe him/her in brief with coherent paragraphs
@@ -92,7 +92,7 @@ if st.button("Answer"):
                     try:
                         # Direct and strict initialization right before calling generating content
                         genai.configure(api_key=api_key)
-                        model = genai.GenerativeModel(model_name="gemini-2.5-flash-lite")
+                        model = genai.GenerativeModel(model_name="gemini-2.5-flash")
                         
                         response = model.generate_content(prompt, stream=True)
                         st.success("Answer from AI:")
