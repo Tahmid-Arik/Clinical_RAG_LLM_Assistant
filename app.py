@@ -12,7 +12,7 @@ load_dotenv(DOTENV_PATH)
 api_key = os.getenv("GEMINI_API_KEY")
 
 st.title("Health and Medical Care App-SciBlitz 2026")
-st.subheader("Welcome to our Health& Medical service AI application.Do you have Any questions about your Health or you want to know about a disease? Ask me anything and I will try to provide you with the best possible answer based on the information available in my context file.")
+st.subheader("Welcome to our Health & Medical service.Tell me about your physical condition and I will try to provide you with the best possible answer based on the information available in my database[Hypertension,Coronary Artery,Stroke,Heart Failure,Palmonary Artery,Palmonary Embolism]")
 
 DATA_FILE_PATH = os.path.join(BASE_DIR, "data", "disease_info.txt")
 
@@ -25,14 +25,37 @@ def load_context():
         st.error("Data file missing! Please create 'data/disease_info.txt'")
         return ""
 
-col1, col2 = st.columns(2)
+col1, col2,col3 = st.columns(3)
 
 with col1:
-    user_age = st.number_input("Write your age:", min_value=1, max_value=100, value=25)
-    existing_disease = st.selectbox("Did you have any disease in previous?", ["None", "Diabetes", "Hypertension", "Kidney Disease"])
+    
+    existing_disease = st.selectbox("Did you have any disease in previous?", ["None", "Hypertension", "Coronary Artery Disease", "Stroke", "Heart Failure", "Palmonary Artery Disease", "Palmonary Embolism"])
 
+    user_weight = st.number_input("your weight in kg:", min_value=1.0, max_value=200.0, value=70.0,step=0.1)
 with col2:
     symptom_days = st.slider("How many days you are suffering? (Days)", 1, 14, 3)
+    user_height = st.number_input("your height in cm:", min_value=1.0, max_value=250.0, value=170.0,step=0.1)
+with col3:
+    user_age = st.number_input("your age:", min_value=1, max_value=100, value=25,step=1)
+    user_gender = st.selectbox("your gender:", ["Male", "Female",])
+
+if user_height > 0:
+    user_bmi = user_weight / ((user_height / 100) ** 2)
+    if user_bmi < 18.5:
+        bmi_category = "Underweight"
+    elif 18.5 <= user_bmi < 24.9:
+        bmi_category = "Normal weight"
+    elif 25 <= user_bmi < 29.9:
+        bmi_category = "Overweight"
+    else:
+        bmi_category = "Obese"
+    if user_gender=="Male":
+        user_bmr=(10*user_weight)+(6.25*user_height)-(5*user_age)+5
+    else:
+        user_bmr=(10*user_weight)+(6.25*user_height)-(5*user_age)-161
+if st.button("Calculate BMI and BMR"):
+    st.markdown(f"Your BMI is: {user_bmi:.2f} ({bmi_category})")
+    st.markdown(f"Your Basal Metabolic Rate (BMR) is: {user_bmr:.2f} kcal/day")
 
 # User symptoms input
 user_symptoms = st.text_area("Write about your current physical or Mental problem in brief:")
@@ -55,12 +78,13 @@ if st.button("Answer"):
                 2.Pre-existing: {existing_disease}
                 3.Duration: {symptom_days} days
                 4.Symptoms: "{user_symptoms}"
+                5.Weight: {user_weight} kg
+                6.Height: {user_height} cm
+                7.BMI: {user_bmi:.2f} ({bmi_category})
+                8.BMR: {user_bmr:.2f} kcal/day
 
-                Evaluation Rules:[Only necessary if the user ask you to identify his/her physical problems]
-                1. Elevate Risk Level according to {user_age} and {symptom_days}
-                2.the user might have multiple disease at once and you must strictly evaluate that.
-                3. Co-relate symptoms with Pre-existing condition {existing_disease} based on {context_data}
-
+                Evaluation Rules:You must consider all the user profile information variable provided above when evaluating the user's symptoms and providing advice.
+                if user ask any general health?medical information provide him/her only within the context of {context_data} and if the user's question is not relatable with  {context_data}
                 if the user's question is not relatable with  {context_data},then inform him about that with an apology and give some general health advice .
                 Crucial: Always end with a medical disclaimer."""
 
@@ -68,7 +92,7 @@ if st.button("Answer"):
                     try:
                         # Direct and strict initialization right before calling generating content
                         genai.configure(api_key=api_key)
-                        model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+                        model = genai.GenerativeModel(model_name="gemini-2.5-flash-lite")
                         
                         response = model.generate_content(prompt, stream=True)
                         st.success("Answer from AI:")
