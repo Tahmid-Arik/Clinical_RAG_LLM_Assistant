@@ -1,16 +1,12 @@
 import streamlit as st
 import os
 import google.generativeai as genai
-from dotenv import load_dotenv
 import time
 
-# Load environment variables explicitly
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOTENV_PATH = os.path.join(BASE_DIR, ".env")
-load_dotenv(DOTENV_PATH)
-
-# Fetch single active API key
-api_key = os.getenv("GEMINI_API_KEY")
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
+else:
+    api_key = None
 
 st.title("Health and Medical Care App-SciBlitz 2026")
 st.subheader("Welcome to our Health & Medical service.Tell me about your physical condition and I will try to provide you with the best possible answer based on the information available in my database[Hypertension,Coronary Artery,Stroke,Heart Failure,Palmonary Artery,Palmonary Embolism]")
@@ -26,6 +22,11 @@ def load_context():
         st.error("Data file missing! Please create 'data/disease_info.txt'")
         return ""
     
+@st.cache_resource
+def get_model(api_key):
+    genai.configure(api_key=api_key)
+    return genai.GenerativeModel(model_name="gemini-2.5-flash")
+
 def calculate_metrics(weight, height, age, gender):
     bmi = weight / ((height / 100) ** 2) if height > 0 else 0
     if bmi < 18.5:
@@ -97,13 +98,13 @@ if st.button("Answer"):
 
                 
                 try:  
-                    genai.configure(api_key=api_key)
-                    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+                    model = get_model(api_key)
                     response = model.generate_content(prompt, stream=True)
+                        
                     st.success("Answer from AI:")
                     st.write_stream(chunk.text for chunk in response)
                 except Exception as e:
-                    st.error(f"Error during AI processing: {e}")
+                    st.error(f"Error connecting to AI: {e}")
      
     else:
         st.warning("Please enter a query.")
