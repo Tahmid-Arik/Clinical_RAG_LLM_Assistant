@@ -61,4 +61,13 @@ DISEASE KNOWLEDGE BASE
 - If BMI >= 25 + Hypertension: Strictly restrict sodium intake (< 1.5g/day).
 - If Age > 60 + Dizziness/Stroke symptoms: Do not allow sudden posture changes (risk of orthostatic hypotension); mandate immediate emergency vitals check.
 - If Heart Failure + High Weight: Monitor daily weight fluctuations. A sudden gain of 1-2 kg in 24 hours indicates fluid retention, requiring urgent diuretic review, not calorie cutting.
--
+5.[Blood Pressure (BP) Thresholds]:
+- Normal BP: Around 120/80 mmHg.
+- High BP (>130/80 mmHg): Main indicator for Hypertension. Directly accelerates risks for Coronary Artery Disease (CAD) and Heart Failure.
+- Low BP (<90/60 mmHg): Indicates Hypotension, which reduces oxygen delivery and potentially signals emergency Stroke conditions.
+
+6.[Blood Group & Transfusion Compatibility]:
+- O- (Universal Donor): Can give blood to ALL groups; can only receive from O-.
+- AB+ (Universal Recipient): Can receive blood from ALL groups; can only give to AB+.
+- Rh+ Groups (A+, B+, AB+, O+): Can receive from both Rh+ and Rh- versions of their compatible types; can only give to Rh+ groups.
+- Rh- Groups (A-, B-, AB-, O-): Can only receive from Rh- types; can give to both Rh+ and Rh- versions.
