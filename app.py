@@ -25,6 +25,23 @@ def load_context():
     else:
         st.error("Data file missing! Please create 'data/disease_info.txt'")
         return ""
+    
+def calculate_metrics(weight, height, age, gender):
+    bmi = weight / ((height / 100) ** 2) if height > 0 else 0
+    if bmi < 18.5:
+        category = "Underweight"
+    elif 18.5 <= bmi < 24.9:
+        category = "Normal weight"
+    elif 25 <= bmi < 29.9:
+        category = "Overweight"
+    else:
+        category = "Obese"
+        
+    if gender == "Male":
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5
+    else:
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161
+    return bmi, category, bmr
 
 col1, col2,col3 = st.columns(3)
 
@@ -40,20 +57,8 @@ with col3:
     user_age = st.number_input("your age:", min_value=1, max_value=100, value=25,step=1)
     user_gender = st.selectbox("your gender:", ["Male", "Female",])
 
-if user_height > 0:
-    user_bmi = user_weight / ((user_height / 100) ** 2)
-    if user_bmi < 18.5:
-        bmi_category = "Underweight"
-    elif 18.5 <= user_bmi < 24.9:
-        bmi_category = "Normal weight"
-    elif 25 <= user_bmi < 29.9:
-        bmi_category = "Overweight"
-    else:
-        bmi_category = "Obese"
-    if user_gender=="Male":
-        user_bmr=(10*user_weight)+(6.25*user_height)-(5*user_age)+5
-    else:
-        user_bmr=(10*user_weight)+(6.25*user_height)-(5*user_age)-161
+user_bmi, bmi_category, user_bmr = calculate_metrics(user_weight, user_height, user_age, user_gender)
+
 if st.button("Calculate BMI and BMR"):
     st.markdown(f"Your BMI is: {user_bmi:.2f} ({bmi_category})")
     st.markdown(f"Your Basal Metabolic Rate (BMR) is: {user_bmr:.2f} kcal/day")
@@ -90,33 +95,15 @@ if st.button("Answer"):
                 Crucial: Always end with a medical disclaimer."""
 
 
-                try:   
+                
+                try:  
                     genai.configure(api_key=api_key)
                     model = genai.GenerativeModel(model_name="gemini-2.5-flash")
-                    max_retries = 3
-                    response = None
-                    for attempt in range(max_retries):
-                        try:
-                            response = model.generate_content(prompt, stream=True)
-                            if response:
-                                st.success("Answer from AI:")
-                                def generate_chunks(stream_resp):
-                                    for chunk in stream_resp:
-                                        yield chunk.text
-
-                        
-                                st.write_stream(generate_chunks(response))
-                                break
-
-                        except Exception as ai_error:
-                            if attempt< max_retries - 1:
-                                st.warning(f"Error connecting to AI: {ai_error}. Retrying... ({attempt + 1}/{max_retries})")
-                                time.sleep(2)  # Wait before retrying
-                                continue
-                            else:
-                                raise ai_error
+                    response = model.generate_content(prompt, stream=True)
+                    st.success("Answer from AI:")
+                    st.write_stream(chunk.text for chunk in response)
                 except Exception as e:
-                    st.error(f"Error connecting to AI: {e}")
+                    st.error(f"Error during AI processing: {e}")
      
     else:
         st.warning("Please enter a query.")
