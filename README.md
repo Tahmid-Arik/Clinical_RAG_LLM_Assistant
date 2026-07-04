@@ -65,6 +65,19 @@ CUETAI-SCIBLITZ2026/
 
 └── README.md
 
+Limitations
+
+API rate limits restrict concurrent multi-user access
+
+Keyword-based retrieval may miss relevant sections when user input uses indirect phrasing or synonyms not present in the database
+
+Occasional 503 server errors during Google Cloud peak load periods
+
+Knowledge base currently scoped to 6 conditions due to free-tier token constraints
+
+
+
+
 Future Work
 
 Vector Search Integration — ChromaDB / Pinecone for semantic retrieval supporting 70+ diseases
