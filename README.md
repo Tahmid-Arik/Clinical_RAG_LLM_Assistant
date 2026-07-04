@@ -35,6 +35,7 @@ AI Approach flowchart:
               ▼
               
 [Generation Layer: Token-Optimized Prompt Boundary]
+
               │
               ▼
               
@@ -48,27 +49,33 @@ AI Approach flowchart:
 Key Design Choice: No model fine-tuning. All domain-specific behavior is enforced entirely through Prompt Engineering + ICL (In-Context Learning) at inference time.
 
 CUETAI-SCIBLITZ2026/
+
 │
+
 ├── app.py                  # Main Streamlit application
+
 ├── requirements.txt        # Python dependencies
+
 │
 ├── data/
+
 │   └── disease_info.txt    # Curated cardiovascular knowledge base
+
 │
+
 └── README.md
 
 Future Work
+
 Vector Search Integration — ChromaDB / Pinecone for semantic retrieval supporting 70+ diseases
+
 Hardware-AI Co-Design — RTL modeling and FPGA deployment as an offline Edge-AI medical device
+
 Formal Verification — SystemVerilog / UVM framework for healthcare logic reliability testing
+
 Expanded Knowledge Base — Broader disease categories across infectious, metabolic, and neurological conditions
 
 
-Future Work
-Vector Search Integration — ChromaDB / Pinecone for semantic retrieval supporting 70+ diseases
-Hardware-AI Co-Design — RTL modeling and FPGA deployment as an offline Edge-AI medical device
-Formal Verification — SystemVerilog / UVM framework for healthcare logic reliability testing
-Expanded Knowledge Base — Broader disease categories across infectious, metabolic, and neurological conditions
 
 License
 Non-commercial use only. Covered under Google AI Studio Terms of Service for developer usage.
