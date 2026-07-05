@@ -66,7 +66,7 @@ if st.button("Calculate BMI and BMR"):
     st.markdown(f"Your Basal Metabolic Rate (BMR) is: {user_bmr:.2f} kcal/day")
 
 # User symptoms input
-user_symptoms = st.text_area("Write about your current physical or Mental problem in brief:")
+user_symptoms = st.text_area("Write about your current physical problems or symptoms in brief:")
 
 if st.button("Answer"):
     if user_symptoms:
